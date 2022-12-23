@@ -1,6 +1,6 @@
 import express from "express";
 import { VerifyDiscordRequest } from "./discord/discord.utils.js";
-import { TEST_COMMAND, HasGuildCommands } from "./discord/discord.commands.js";
+import { TEST_COMMAND, QUOTE_COMMAND, HasGuildCommands } from "./discord/discord.commands.js";
 import {
     InteractionType,
     InteractionResponseType,
@@ -8,6 +8,7 @@ import {
     MessageComponentTypes,
     ButtonStyleTypes,
   } from "discord-interactions";
+import { RandomQuotes } from "./web3/web3.commands.js";
 import dotenv from "dotenv";
 dotenv.config()
 
@@ -40,6 +41,14 @@ app.post("/interactions", async function (req, res){
                 },
             });
         }
+
+        // "quotes" guild command
+        if (name === "citação") {
+            res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                data: { content: RandomQuotes(),
+                 },
+            });
+        }
     }
 });
 
@@ -47,5 +56,5 @@ app.listen(port, () =>{
     console.log(`Listening on port ${port}`);
 
     // Check if guild commands from commands.json are installed (if not, install them)
-    HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [TEST_COMMAND]);
+    HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [TEST_COMMAND, QUOTE_COMMAND]);
 });

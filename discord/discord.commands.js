@@ -45,6 +45,13 @@ export async function InstallGuildCommand (appId, guildId, command) {
 // Simple test command
 export const TEST_COMMAND = {
     name: 'test',
-    description: 'Ping command',
+    description: 'Test command',
+    type: 1,
+};
+
+// Quotes command
+export const QUOTE_COMMAND = {
+    name: 'citação',
+    description: 'Receba uma citação aleatória',
     type: 1,
 };
