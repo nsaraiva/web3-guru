@@ -1,6 +1,6 @@
 import express from "express";
 import { VerifyDiscordRequest } from "./discord/discord.utils.js";
-import { TEST_COMMAND, QUOTE_COMMAND, HasGuildCommands } from "./discord/discord.commands.js";
+import { HasGuildCommands, GetGuildCommands } from "./discord/discord.commands.js";
 import {
     InteractionType,
     InteractionResponseType,
@@ -31,7 +31,7 @@ app.post("/interactions", async function (req, res){
 
     // Handle slash command requests
     if (type === InteractionType.APPLICATION_COMMAND) {
-        const { name} = data;
+        const { name } = data;
 
         // "test" guild command
         if (name === "test") {
@@ -56,5 +56,5 @@ app.listen(port, () =>{
     console.log(`Listening on port ${port}`);
 
     // Check if guild commands from commands.json are installed (if not, install them)
-    HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [TEST_COMMAND, QUOTE_COMMAND]);
+    HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, GetGuildCommands());
 });

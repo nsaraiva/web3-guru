@@ -1,0 +1,22 @@
+{
+    "commands": [
+        {
+            "name": "test",
+            "description": "Test command",
+            "type": 1,
+            "command": "TEST_COMMAND",
+            "data": {
+                "content": ""
+            }
+        },
+        {
+            "name": "citação",
+            "description": "Receba uma citação aleatória",
+            "type": 1,
+            "command": "QUOTES_COMMAND",
+            "data": {
+                "content": ""
+            }
+        }
+    ]
+}

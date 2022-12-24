@@ -1,4 +1,5 @@
 import { DiscordRequest } from './discord.utils.js';
+import Commands from "../commands.json" assert { type: "json" };
 
 export async function HasGuildCommands (appId, guildId, commands) {
     if (guildId === '' || appId === '') return;
@@ -30,6 +31,14 @@ async function HasGuildCommand (appId, guildId, command) {
     }
 }
 
+// Gets all commands
+export function GetGuildCommands() {
+    const {commands} = Commands;
+    console.log(commands);
+    const commandsName = commands.map((c) => c['command']);
+    return commands;
+}
+
 // Installs a command
 export async function InstallGuildCommand (appId, guildId, command) {
     // API endpoint to get and post guild commands
@@ -41,17 +50,3 @@ export async function InstallGuildCommand (appId, guildId, command) {
         console.error(err);
     }
 }
-
-// Simple test command
-export const TEST_COMMAND = {
-    name: 'test',
-    description: 'Test command',
-    type: 1,
-};
-
-// Quotes command
-export const QUOTE_COMMAND = {
-    name: 'citação',
-    description: 'Receba uma citação aleatória',
-    type: 1,
-};
