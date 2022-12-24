@@ -5,5 +5,5 @@ export function RandomQuotes (){
     const quotesLength = quotes.length;
     const quote = quotes[Math.floor(Math.random() * quotesLength)];
 
-    return `"${quote.quote}" - ${quote.author}`;
+    return `"${quote.quote}" — ${quote.author}`;
 }
