@@ -1,14 +1,8 @@
 import express from "express";
 import { VerifyDiscordRequest } from "./discord/discord.utils.js";
-import { HasGuildCommands, GetGuildCommands } from "./discord/discord.commands.js";
-import {
-    InteractionType,
-    InteractionResponseType,
-    InteractionResponseFlags,
-    MessageComponentTypes,
-    ButtonStyleTypes,
-  } from "discord-interactions";
-import { RandomQuotes } from "./web3/web3.commands.js";
+import { HasGuildCommands, GetMyGuildCommands, GetCommandContentByName } from "./discord/discord.commands.js";
+import { RandomQuotes, Namaste } from "./web3/web3.commands.js";
+import { InteractionType, InteractionResponseType, InteractionResponseFlags, MessageComponentTypes, ButtonStyleTypes } from "discord-interactions";
 import dotenv from "dotenv";
 dotenv.config()
 
@@ -33,22 +27,11 @@ app.post("/interactions", async function (req, res){
     if (type === InteractionType.APPLICATION_COMMAND) {
         const { name } = data;
 
-        // "test" guild command
-        if (name === "test") {
-            res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                data: {
-                    content: "Hello World!",
-                },
-            });
-        }
-
-        // "quotes" guild command
-        if (name === "citação") {
-            res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                data: { content: RandomQuotes(),
-                 },
-            });
-        }
+        res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+                content: eval(GetCommandContentByName(name)),
+            },
+        });
     }
 });
 
@@ -56,5 +39,5 @@ app.listen(port, () =>{
     console.log(`Listening on port ${port}`);
 
     // Check if guild commands from commands.json are installed (if not, install them)
-    HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, GetGuildCommands());
+    HasGuildCommands(process.env.APP_ID, process.env.GUILDS_ID, GetMyGuildCommands());
 });

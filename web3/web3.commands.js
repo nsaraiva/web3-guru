@@ -7,3 +7,7 @@ export function RandomQuotes (){
 
     return `"${quote.quote}" — ${quote.author}`;
 }
+
+export function Namaste() {
+    return "Namaste 🙏";
+}

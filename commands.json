@@ -1,12 +1,12 @@
 {
     "commands": [
         {
-            "name": "test",
-            "description": "Test command",
+            "name": "namaste",
+            "description": "Comando de saudação",
             "type": 1,
-            "command": "TEST_COMMAND",
+            "command": "NAMASTE_COMMAND",
             "data": {
-                "content": ""
+                "content": "Namaste()"
             }
         },
         {
@@ -15,7 +15,7 @@
             "type": 1,
             "command": "QUOTES_COMMAND",
             "data": {
-                "content": ""
+                "content": "RandomQuotes ()"
             }
         }
     ]

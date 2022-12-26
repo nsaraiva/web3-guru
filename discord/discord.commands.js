@@ -1,42 +1,52 @@
 import { DiscordRequest } from './discord.utils.js';
 import Commands from "../commands.json" assert { type: "json" };
 
-export async function HasGuildCommands (appId, guildId, commands) {
-    if (guildId === '' || appId === '') return;
+export async function HasGuildCommands (appId, guildsId, commands) {
+    if (guildsId === '' || appId === '') return;
 
-    commands.forEach((c) => HasGuildCommand(appId, guildId, c));
+    commands.forEach((c) => HasGuildCommand(appId, guildsId, c));
 }
 
 // Checks for a command
-async function HasGuildCommand (appId, guildId, command) {
-    // API endpoint to get and post guild commands
-    const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
+async function HasGuildCommand (appId, guildsId, command) {
+    const guildsIdArray = guildsId.split(',');
+    guildsIdArray.map((guildId) => {
+        // API endpoint to get and post guild commands
+        const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
 
-    try {
-        const res = await DiscordRequest (endpoint, {method: 'GET'});
-        const data = res ? await res.json() : null;
-
-        if (data) {
-            const installedNames = data.map((c) => c['name']);
-            // This is just matching on the name, so it's not good for updates
-            if (!installedNames.includes(command['name'])) {
-                console.log(`Installing "${command['name']}"`);
-                InstallGuildCommand (appId, guildId, command);                
-            } else {
-                console.log(`"${command['name']}" is already installed`);
-            }
+        try {
+            const discordRequest = DiscordRequest (endpoint, {method: 'GET'})
+            .then((res) => res.json()
+            .then((data) => {
+                //const data = res ? await res.json() : null;
+                if (data) {
+                    const installedNames = data.map((c) => c['name']);
+                    // This is just matching on the name, so it's not good for updates
+                    if (!installedNames.includes(command['name'])) {
+                        console.log(`Installing "${command['name']}"`);
+                        InstallGuildCommand (appId, guildId, command);                
+                    } else {
+                        console.log(`"${command['name']}" is already installed`);
+                    }
+                }
+            }));
+        } catch (err) {
+            console.error(err);
         }
-    } catch (err) {
-        console.error(err);
-    }
+    });    
 }
 
 // Gets all commands
-export function GetGuildCommands() {
+export function GetMyGuildCommands() {
     const {commands} = Commands;
-    console.log(commands);
     const commandsName = commands.map((c) => c['command']);
     return commands;
+}
+
+export function GetCommandContentByName(name) {
+    const {commands} = Commands;
+    const command = commands.find((c) => c['name'] === name);
+    return command['data']['content'];
 }
 
 // Installs a command
