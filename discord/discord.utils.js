@@ -6,10 +6,7 @@ bodyParser.json();
 export function VerifyDiscordRequest(clientKey) {
     return function (req, res, buf, encoding) {
       const signature = req.get('X-Signature-Ed25519');
-      const timestamp = req.get('X-Signature-Timestamp');
-      
-console.log('buf: ' + buf + ' signature: ' + signature + ' timestamp: ' + timestamp + ' clientKey: ' + clientKey);
-
+      const timestamp = req.get('X-Signature-Timestamp');    
       const isValidRequest = verifyKey(buf, signature, timestamp, clientKey);
       if (!isValidRequest) {
         res.status(401).send('Bad request signature');
@@ -19,7 +16,6 @@ console.log('buf: ' + buf + ' signature: ' + signature + ' timestamp: ' + timest
   }
 
 export async function DiscordRequest(endpoint, options) {
-  console.log(endpoint);
     // Append endpoint to root API URL
     const url = 'https://discord.com/api/v10/' + endpoint;    
     // Stringify payloads
@@ -36,7 +32,6 @@ export async function DiscordRequest(endpoint, options) {
 
         //console.log(res);
         // Throw API errors
-        console.log(res.status);
         if (!res.ok) {
             const data = await res.json();
             console.log(res.status);

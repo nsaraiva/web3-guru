@@ -10,13 +10,13 @@ dotenv.config()
 const app = express();
 // Get port, or default to 3000
 const port = process.env.PORT || 3000;
+const channelIdArray = process.env.CHANNEL_IDS.split(',');
 
 // Parse request body and verifies incoming requests using discord-interactions package
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
-
 app.post("/interactions", async function (req, res){
-    const { type, id, data} = req.body;
+    const { type, id, channel_id, data} = req.body;
 
     // Handle verification requests
     if (type === InteractionType.PING) {
@@ -24,12 +24,18 @@ app.post("/interactions", async function (req, res){
     }
 
     // Handle slash command requests
-    if (type === InteractionType.APPLICATION_COMMAND) {
+    if (type === InteractionType.APPLICATION_COMMAND && channelIdArray.includes(channel_id)) {
         const { name } = data;
-
+        
         res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
                 content: eval(GetCommandContentByName(name)),
+            },
+        });
+    } else {
+        res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+                content: "Eu não respondo nesse canal... 🙏",
             },
         });
     }

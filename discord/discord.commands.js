@@ -9,11 +9,12 @@ export async function HasGuildCommands (appId, guildsId, commands) {
 
 // Checks for a command
 async function HasGuildCommand (appId, guildsId, command) {
+    // Guild Ids
     const guildsIdArray = guildsId.split(',');
+
     guildsIdArray.map((guildId) => {
         // API endpoint to get and post guild commands
         const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
-
         try {
             const discordRequest = DiscordRequest (endpoint, {method: 'GET'})
             .then((res) => res.json()
@@ -23,10 +24,10 @@ async function HasGuildCommand (appId, guildsId, command) {
                     const installedNames = data.map((c) => c['name']);
                     // This is just matching on the name, so it's not good for updates
                     if (!installedNames.includes(command['name'])) {
-                        console.log(`Installing "${command['name']}"`);
+                        console.log(`Installing "${command['name']}" on ${guildId}`);
                         InstallGuildCommand (appId, guildId, command);                
                     } else {
-                        console.log(`"${command['name']}" is already installed`);
+                        console.log(`"${command['name']}" is already installed on ${guildId}`);
                     }
                 }
             }));
