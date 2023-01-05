@@ -6,7 +6,7 @@
 </div>
 
 # Web3 Guru
-Learn-to-earn Web3 bot for Discord
+Learn to Earn Web3 bot for Discord
 
 ## Install 
 
