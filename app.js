@@ -1,49 +1,34 @@
-import express from "express";
-import { VerifyDiscordRequest } from "./discord/discord.utils.js";
-import { HasGuildCommands, GetMyGuildCommands, GetCommandContentByName } from "./discord/discord.commands.js";
-import { RandomQuotes, Namaste } from "./web3/web3.commands.js";
-import { InteractionType, InteractionResponseType, InteractionResponseFlags, MessageComponentTypes, ButtonStyleTypes } from "discord-interactions";
+import { Client, GatewayIntentBits } from 'discord.js';
+import { RefreshCommands, GetMyGuildCommands, GetCommandContentByName, GetMessageByChannelId } from "./discord/discord.utils.js";
+import { Namaste, RandomQuotes, CheckAddress } from './web3/commands/index.js'
 import dotenv from "dotenv";
 dotenv.config()
 
-// Create an express app
-const app = express();
-// Get port, or default to 3000
-const port = process.env.PORT || 3000;
-const channelIdArray = process.env.CHANNEL_IDS.split(',');
+// Refreshing commands
+RefreshCommands(process.env.APP_ID, process.env.DISCORD_TOKEN, GetMyGuildCommands());
 
-// Parse request body and verifies incoming requests using discord-interactions package
-app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
-
-app.post("/interactions", async function (req, res){
-    const { type, id, channel_id, data} = req.body;
-
-    // Handle verification requests
-    if (type === InteractionType.PING) {
-        res.send({ type: InteractionResponseType.PONG });
-    }
-
-    // Handle slash command requests
-    if (type === InteractionType.APPLICATION_COMMAND && channelIdArray.includes(channel_id)) {
-        const { name } = data;
-        
-        res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-                content: eval(GetCommandContentByName(name)),
-            },
-        });
-    } else {
-        res.send({ type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-                content: "Eu não respondo nesse canal... 🙏",
-            },
-        });
-    }
+const client = new Client({ intents: [
+                                GatewayIntentBits.Guilds,
+                                GatewayIntentBits.GuildMessages,
+                                GatewayIntentBits.MessageContent,
+                            ]
 });
 
-app.listen(port, () =>{
-    console.log(`Listening on port ${port}`);
-
-    // Check if guild commands from commands.json are installed (if not, install them)
-    HasGuildCommands(process.env.APP_ID, process.env.GUILDS_ID, GetMyGuildCommands());
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
 });
+
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isChatInputCommand()) return;
+
+    await interaction.reply(eval(GetCommandContentByName(interaction.commandName)));
+});
+
+client.on('messageCreate', (message) => {
+    const bot = JSON.parse(message.author.bot);
+
+    if(bot) return;
+    message.channel.send(eval(GetMessageByChannelId(message.channelId.toString())));
+});
+
+client.login(process.env.DISCORD_TOKEN);

@@ -1,10 +1,22 @@
 {
+  "name": "Web3 Guru",
+  "version": "1.1.0.",
+  "description": "Web3 Guru is a Discord bot that helps you learn about Web3",
   "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "type": "module",
+  "keywords": [
+    "web3",
+    "discord",
+    "bot"
+  ],
+  "author": "devNelson#5918",
+  "license": "",
   "dependencies": {
-    "discord-interactions": "^3.2.0",
+    "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "node-fetch": "^3.3.0"
+    "web3": "^1.8.1"
   }
 }
