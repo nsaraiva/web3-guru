@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config()
 
 // Refreshing commands
-RefreshCommands(process.env.APP_ID, process.env.DISCORD_TOKEN, GetMyGuildCommands());
+RefreshCommands(process.env.APP_ID, process.env.BOT_TOKEN, GetMyGuildCommands());
 
 const client = new Client({ intents: [
                                 GatewayIntentBits.Guilds,

@@ -1,6 +1,6 @@
 {
   "name": "Web3 Guru",
-  "version": "1.1.0.",
+  "version": "0.1.0.",
   "description": "Web3 Guru is a Discord bot that helps you learn about Web3",
   "main": "app.js",
   "scripts": {
