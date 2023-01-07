@@ -1,27 +1,10 @@
 {
-    "commands": [
-        {
-            "name": "namaste",
-            "description": "Comando de saudação",
-            "run": "Namaste()",
-            "commandType": "slash",
-            "install": true,
-            "channelId": ""
-        },
-        {
-            "name": "citação",
-            "description": "Receba uma citação aleatória",
-            "run": "RandomQuotes()",
-            "commandType": "slash",
-            "install": true,
-            "channelId": ""
-        },
-        {
-            "name": "checkWallet",
+    "commands": 
+    [
+         {
+            "name": "CheckAddress",
             "description": "Verifica o endereço da carteira",
             "run": "CheckAddress(message.content)",
-            "commandType": "message",
-            "install": false,
             "channelId": "1020344622473543778"            
         }
     ]
