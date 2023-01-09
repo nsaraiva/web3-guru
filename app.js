@@ -19,7 +19,7 @@ client.on('messageCreate', (message) => {
     const { bot, username, discriminator } = message.author;
     const channelId = message.channelId.toString();
 
-    if(bot || username === 'Web3 Guru') return;
+    if(bot) return;
 
     message.channel.send(eval(GetMessageByChannelId(channelId)));
 });
