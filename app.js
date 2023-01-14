@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { GetMessageByChannelId } from "./discord/discord.utils.js";
 import { CheckAddress } from './web3/commands/index.js'
 import dotenv from "dotenv";
@@ -8,20 +8,21 @@ const client = new Client({ intents: [
                                 GatewayIntentBits.Guilds,
                                 GatewayIntentBits.GuildMessages,
                                 GatewayIntentBits.MessageContent,
+                                GatewayIntentBits.GuildMessageReactions
                             ]
 });
 
-client.on('ready', () => {
+client.on(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('messageCreate', (message) => {
+client.on(Events.MessageCreate, (message) => {
     const { bot, username, discriminator } = message.author;
     const channelId = message.channelId.toString();
 
     if(bot) return;
 
-    message.channel.send(eval(GetMessageByChannelId(channelId)));
+    message.react(eval(GetMessageByChannelId(channelId)));
 });
 
 client.login(process.env.BOT_TOKEN);
