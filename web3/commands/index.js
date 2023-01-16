@@ -1,3 +1,3 @@
-import { CheckAddress } from "./CheckAddress.js";
+import { SendErcToken } from "./SendErcToken.js";
 
-export {  CheckAddress };
+export { SendErcToken };
