@@ -8,19 +8,33 @@ const Web3js = new Web3(new Web3.providers.HttpProvider(process.env.HTTP_PROVIDE
 
 const tokenAddress = process.env.TOKEN_ADDRESS; 
 const fromAddress = process.env.WALLET_ADDRESS;
-const privateKey = process.env.PRIVATE_KEY 
+const privateKey = process.env.PRIVATE_KEY;
 
 const contractABI = ABI;
-const contract = new Web3js.eth.Contract(contractABI, tokenAddress, { from: fromAddress })
+const contract = new Web3js.eth.Contract(contractABI, tokenAddress, { from: fromAddress });
 
-const decimals = Web3.utils.toBN(18);
-const amount = Web3.utils.toBN(1);
-const value = amount.mul(Web3.utils.toBN(10).pow(decimals));
+export async function SendERCToken(toAddress, amount){
+    try {
+        const signTransaction = await SignTransaction(toAddress, amount);
+        if(signTransaction.status !== 'error'){
+            const sendSignedTransaction = await SendSignedTransaction(signTransaction.message);
+            return sendSignedTransaction;
+        } else{
+            return signTransaction;
+        }
+    }catch (error) {
+        return new Object({type: 'SendERCToken', status: 'error', message: error});
+    }
+};
 
-export function SendErcToken(message) {
+async function SignTransaction(toAddress, amount) {
+    const decimals = Web3.utils.toBN(18);
+    const tokenAmount = Web3.utils.toBN(amount);
+    const value = tokenAmount.mul(Web3.utils.toBN(10).pow(decimals));
     try{
-        const toAddress = message.content;
         const data = contract.methods.transfer(toAddress, value).encodeABI();
+        
+        let result = new Object();
 
         let txObj = {
             gas: Web3js.utils.toHex(100000),
@@ -30,28 +44,28 @@ export function SendErcToken(message) {
             "from": fromAddress
         };
 
-        Web3js.eth.accounts.signTransaction(txObj, privateKey, (err, signedTx) => {
+        await Web3js.eth.accounts.signTransaction(txObj, privateKey, (err, signedTx) => { // Signs an Ethereum transaction with a given private key.
             if (err) {
-                console.log(err);
+                result = {type: 'signTransaction', status: 'error', message: err};
             } else {
-                console.log(signedTx);
-                return Web3js.eth.sendSignedTransaction(signedTx.rawTransaction, (err, res) => {
-                    if (err) {
-                        console.log(err);
-                        message.channel.send(`😕 <@${message.author.id}> algo deu errado... Tente novamente mais tarde.`);
-                        message.react('👎');
-                    } else {
-                        console.log(res);
-                        message.channel.send(`<@${message.author.id}> missão cumprida!!! Você acabou de ganhar uma estrelinha. 😃`);
-                        message.react('👍');
-                        message.react('⭐');
-                    }
-                })
+                result = {type: 'signTransaction', status: 'success', message: signedTx};
             }
         })
-    } catch (error) {
-        console.log(error);
-        message.channel.send(`🤔 <@${message.author.id}> isso não parece ser um endereço válido.`);
-        message.react('👎');
+        return result;
+    }catch (error) {
+        return new Object({type: 'encodeABI', status: 'error', message: error});
     }
-}
+};
+
+async function SendSignedTransaction(signedTx){
+    let result = new Object();
+    await Web3js.eth.sendSignedTransaction(signedTx.rawTransaction, (err, res) => {
+        if (err){
+            console.log(err);
+            result = {type: 'sendSignedTransaction', status: 'error', message: err};
+        } else {
+            result = {type: 'sendSignedTransaction', status: 'success', message: res};
+        }
+    })
+    return result;
+};

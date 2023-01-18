@@ -3,8 +3,8 @@
     [
          {
             "name": "Missão 1",
-            "description": "Send a token to the wallet address",
-            "run": "SendErcToken(message)",
+            "description": "Enviar um token para o endereço da carteira",
+            "run": "CheckWallet(message)",
             "channelId": "1020344622473543778"            
         }
     ]

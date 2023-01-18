@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { GetMessageByChannelId } from "./discord/discord.utils.js";
-import { SendErcToken } from './web3/commands/index.js'
+import { CheckWallet } from './web3/commands/index.js'
 import dotenv from "dotenv";
 dotenv.config()
 

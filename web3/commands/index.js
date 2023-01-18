@@ -1,3 +1,3 @@
-import { SendErcToken } from "./SendErcToken.js";
+import { CheckWallet } from "./CheckWallet.js";
 
-export { SendErcToken };
+export { CheckWallet }
