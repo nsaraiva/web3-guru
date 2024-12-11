@@ -1,7 +1,6 @@
 <div align="center">
   <figure>
     <img src="https://imagizer.imageshack.com/img922/3427/UUHaMT.png" style="max-width:30%"><br/>
-    <figcaption style="text-align:center;color:#CCC;">Image generated with <strong>DALL-E</strong></figcaption>
   </figure>
 </div>
 
